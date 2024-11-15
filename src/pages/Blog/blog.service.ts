@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Post } from 'types/blog.types'
+import { CustomError } from 'utils/helpers'
 
 export const blogAPI = createApi({
   reducerPath: 'blogAPI', //tên feild của Redux State
@@ -24,24 +25,32 @@ export const blogAPI = createApi({
     }),
     addPost: build.mutation<Post, Omit<Post, 'id'>>({
       query(body) {
-        return {
-          url: 'posts',
-          method: 'POST',
-          body
+        try {
+          return {
+            url: 'posts',
+            method: 'POST',
+            body
+          }
+        } catch (error: any) {
+          throw new CustomError(error.message)
         }
       },
-      invalidatesTags: (result, error, body) => [
-        {
-          type: 'Posts',
-          id: 'LIST'
-        }
-      ]
+      invalidatesTags: (result, error, body) =>
+        error
+          ? []
+          : [
+              {
+                type: 'Posts',
+                id: 'LIST'
+              }
+            ]
     }),
     getPostItem: build.query<Post, string>({
       query: (id) => `posts/${id}`
     }),
     updatePost: build.mutation<Post, { id: string; body: Post }>({
       query(data) {
+        // throw Error("hehehehehehe")
         return {
           url: `posts/${data.id}`,
           method: 'PUT',
@@ -49,12 +58,15 @@ export const blogAPI = createApi({
         }
       },
       //trong trường hợp này thì getPosts sẽ chạy lại
-      invalidatesTags: (result, error, data) => [
-        {
-          type: 'Posts',
-          id: data.id
-        }
-      ]
+      invalidatesTags: (result, error, data) =>
+        error
+          ? []
+          : [
+              {
+                type: 'Posts',
+                id: data.id
+              }
+            ]
     }),
     deletePost: build.mutation<{}, string>({
       query(postId) {

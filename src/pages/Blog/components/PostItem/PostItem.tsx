@@ -7,7 +7,7 @@ interface PostItemProps {
 }
 
 export default function PostItem(props: PostItemProps) {
-  const { post, handleStartEditingPost , handleDeletePost } = props
+  const { post, handleStartEditingPost, handleDeletePost } = props
   return (
     <>
       <div className='flex flex-col items-center overflow-hidden rounded-lg border md:flex-row'>

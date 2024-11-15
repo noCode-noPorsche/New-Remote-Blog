@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { startEditingPost } from 'pages/Blog/blog.slice'
 
 export default function PostList() {
-
   //isLoading chỉ dành cho lần fetch đầu tiên
   //isFetching là mỗi lần gọi API
   const { data, isFetching } = useGetPostsQuery()
