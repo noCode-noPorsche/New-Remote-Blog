@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'store'
 import { Post } from 'types/blog.types'
-import { isEntityError, isFetchBaseQueryError } from 'utils/helpers'
+import { isEntityError } from 'utils/helpers'
 
 const initialPost: Omit<Post, 'id'> = {
   description: '',
@@ -27,7 +27,9 @@ export default function CreatePost() {
   const postId = useSelector((state: RootState) => state.blog.postId)
   const dispatch = useDispatch()
   const [addPost, addPostResult] = useAddPostMutation()
-  const { data } = useGetPostItemQuery(postId, { skip: !postId })
+  const { data, refetch } = useGetPostItemQuery(postId, { skip: !postId, pollingInterval: 10000, refetchOnMountOrArgChange: true })
+  //polling mỗi 10s
+  //refetch API không caching
   const [updatePost, updatePostResult] = useUpdatePostMutation()
 
   const errorForm: FormError = useMemo(() => {
