@@ -17,9 +17,9 @@ const initialPost: Omit<Post, 'id'> = {
 
 type FormError =
   | {
-      // [key in keyof Omit<Post, 'id'>]: string
-      [key in keyof typeof initialPost]: string
-    }
+    // [key in keyof Omit<Post, 'id'>]: string
+    [key in keyof typeof initialPost]: string
+  }
   | null
 
 export default function CreatePost() {
@@ -89,18 +89,32 @@ export default function CreatePost() {
         />
       </div>
       <div className='mb-6'>
-        <label htmlFor='featuredImage' className='mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300'>
+        <label htmlFor='featuredImage' className={classNames('mb-2 block text-sm font-medium text-gray-900 dark:text-gray-300', {
+          'text-red-700': Boolean(errorForm?.featuredImage),
+          'text-gray-900': !Boolean(errorForm?.featuredImage)
+        })}>
           Featured Image
         </label>
         <input
           type='text'
           id='featuredImage'
-          className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-blue-500'
+          className={classNames('block w-full rounded-lg border   p-2.5 text-sm text-gray-900  focus:outline-none ',
+            {
+              "border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500": Boolean(errorForm?.featuredImage),
+              "border-gray-300 bg-gray-50 focus:border-blue-500 focus:ring-blue-500": !Boolean(errorForm?.featuredImage)
+            }
+          )}
           placeholder='Url image'
           required
           value={formData.featuredImage}
           onChange={(event) => setFormData((prev) => ({ ...prev, featuredImage: event.target.value }))}
         />
+        {errorForm?.featuredImage && (
+          <p className='mt-2 text-sm text-red-600'>
+            <span className='font-medium'>Lỗi! </span>
+            {errorForm.featuredImage}
+          </p>
+        )}
       </div>
       <div className='mb-6'>
         <div>
